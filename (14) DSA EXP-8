@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
+
+struct Node* last = NULL; 
+
+void insertAtEnd(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+
+    if (last == NULL) {
+        newNode->next = newNode->prev = newNode;
+        last = newNode;
+    } else {
+        newNode->next = last->next;
+        newNode->prev = last;
+        last->next->prev = newNode;
+        last->next = newNode;
+        last = newNode;
+    }
+    printf("%d inserted at the end.\n", value);
+}
+
+void insertAtBeginning(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+
+    if (last == NULL) {
+        newNode->next = newNode->prev = newNode;
+        last = newNode;
+    } else {
+        newNode->next = last->next;
+        newNode->prev = last;
+        last->next->prev = newNode;
+        last->next = newNode;
+    }
+    printf("%d inserted at the beginning.\n", value);
+}
+
+void deleteFromBeginning() {
+    if (last == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = last->next;
+
+    if (last == last->next) { 
+        printf("%d deleted from the beginning.\n", temp->data);
+        free(temp);
+        last = NULL;
+    } else {
+        last->next = temp->next;
+        temp->next->prev = last;
+        printf("%d deleted from the beginning.\n", temp->data);
+        free(temp);
+    }
+}
+
+void deleteFromEnd() {
+    if (last == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = last;
+
+    if (last == last->next) {
+        printf("%d deleted from the end.\n", temp->data);
+        free(temp);
+        last = NULL;
+    } else {
+        temp->prev->next = last->next;
+        last->next->prev = temp->prev;
+        last = temp->prev;
+        printf("%d deleted from the end.\n", temp->data);
+        free(temp);
+    }
+}
+
+void displayForward() {
+    if (last == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = last->next;
+    printf("Circular Doubly Linked List (Forward): ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != last->next);
+    printf("(back to head)\n");
+}
+
+void displayReverse() {
+    if (last == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = last;
+    printf("Circular Doubly Linked List (Reverse): ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->prev;
+    } while (temp != last);
+    printf("(back to tail)\n");
+}
+
+int main() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- Circular Doubly Linked List Menu ---\n");
+        printf("1. Insert at Beginning\n");
+        printf("2. Insert at End\n");
+        printf("3. Delete from Beginning\n");
+        printf("4. Delete from End\n");
+        printf("5. Display (Forward)\n");
+        printf("6. Display (Reverse)\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1:
+            printf("Enter value to insert: ");
+            scanf("%d", &value);
+            insertAtBeginning(value);
+            break;
+
+        case 2:
+            printf("Enter value to insert: ");
+            scanf("%d", &value);
+            insertAtEnd(value);
+            break;
+
+        case 3:
+            deleteFromBeginning();
+            break;
+
+        case 4:
+            deleteFromEnd();
+            break;
+
+        case 5:
+            displayForward();
+            break;
+
+        case 6:
+            displayReverse();
+            break;
+
+        case 7:
+            return 0;
+
+        default:
+            printf("Invalid choice! Try again.\n");
+        }
+    }
+
+    return 0;
+}
